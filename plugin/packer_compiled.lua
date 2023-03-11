@@ -190,6 +190,11 @@ _G.packer_plugins = {
     path = "/home/refik/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-lua/telescope.nvim"
   },
+  ["vim-markdown"] = {
+    loaded = true,
+    path = "/home/refik/.local/share/nvim/site/pack/packer/start/vim-markdown",
+    url = "https://github.com/plasticboy/vim-markdown"
+  },
   ["vim-polyglot"] = {
     loaded = true,
     path = "/home/refik/.local/share/nvim/site/pack/packer/start/vim-polyglot",

@@ -27,6 +27,9 @@ vim.opt.signcolumn = "yes"
 vim.opt.updatetime = 750
 vim.opt.colorcolumn = "80"
 
+-- for folding
+vim.opt.foldmethod = "marker"
+
 -- disable netrw at the very start of your init.lua (strongly advised)
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -34,3 +37,4 @@ vim.g.mapleader = ' '
 
 vim.bo.autoindent = true
 vim.bo.smartindent = true
+

@@ -10,7 +10,6 @@ local key_map = function(mode, key, result)
 end
 
 -- leave insert/visual mode
-key_map('i','jj', '<ESC>')
 key_map('v','jj', '<ESC>')
 
 -- search centers cursor
@@ -23,13 +22,12 @@ key_map('n', '}', "}zz")
 key_map('n', '<C-d>', "<C-d>zz")
 key_map('n', '<C-u>', "<C-u>zz")
 
-
 -- move block of text with auto indenting
 key_map('v', 'J', ":m '>+1<CR>gv=gv")
 key_map('v', 'K', ":m '<-2<CR>gv=gv")
 
 -- The greatest remap of all time (delete without changing buffer)
-key_map('x', '<leader>p', "\"_dP")
+key_map('n', '<leader>p', "\"_dP")
 
 -- leave insert after copy 
 key_map('n', 'c', "c<ESC>")
@@ -75,14 +73,22 @@ key_map('n', '<leader>fb', ':lua require"telescope.builtin".buffers()<CR>')
 -- File Tree
 key_map('n', '<leader>tt', ':NvimTreeToggle<CR>')
 key_map('n', '<leader>tc',':NvimTreeCollapse<CR>')
-key_map('n', '<leader>tf', ':NvimTreeFindFile<CR>')
+key_map('n', '<leader>tf', ':NvimTreeFindFileToggle<CR>')
 
 -- Tabs
 key_map('n', '<leader>tn', ':tabnext<CR>')
 key_map('n', '<leader>tN', ':tabnew<CR>')
 
 -- Buffers
+key_map('n', '<leader>', ':vsplit<CR>')
+key_map('n', '<leader>', ':split<CR>')
+
+-- Windows
 key_map('n', '<leader>v', ':vsplit<CR>')
 key_map('n', '<leader>h', ':split<CR>')
 
+-- Folding
+key_map('n', '<leader>m', ':fold<CR>f}i<CR><CR><ESC>kdwdwk$')
+key_map('n', '<leader>mc', 'i-- }}} <ESC>')
+key_map('n', '<leader>mo', 'i-- {{{ <ESC>')
 

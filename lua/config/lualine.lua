@@ -30,7 +30,7 @@ local conditions = {
   end,
 }
 
--- Config
+-- {{{ Config
 local config = {
   options = {
     -- Disable sections and component separators
@@ -64,6 +64,7 @@ local config = {
     lualine_x = {},
   },
 }
+-- }}}
 
 -- Inserts a component in lualine_c at left section
 local function ins_left(component)
@@ -75,7 +76,7 @@ local function ins_right(component)
   table.insert(config.sections.lualine_x, component)
 end
 
-
+-- {{{ Original Mode Section
 --ins_left {
 --  -- mode component
 --  function()
@@ -109,7 +110,9 @@ end
 --  end,
 --  padding = { right = 1 },
 --}
+-- }}}
 
+-- {{{ Left Sections
 ins_left {
   -- filesize component
   'filesize',
@@ -161,7 +164,9 @@ ins_left {
   icon = ' LSP:',
   color = { fg = '#ffffff', gui = 'bold' },
 }
+-- }}}
 
+-- {{{ Right Sections
 -- Add components to right sections
 ins_right {
   'o:encoding', -- option component same as &encoding in viml
