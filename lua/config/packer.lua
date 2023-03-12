@@ -8,7 +8,7 @@ local fn = vim.fn
 -- ensure that packer is installed
 local install_path = fn.stdpath('data')..'/site/pack/packer/opt/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
-  execute('!git clone git@github.com:wbthomason/packer.nvim.git '..install_path)
+  execute('!git clone https://github.com/wbthomason/packer.nvim.git '..install_path)
   execute 'packadd packer.nvim'
 end
 
@@ -22,32 +22,32 @@ packer.init({
 
 -- {{{ Packer Startup
 --- startup and add configure plugins
-packer.startup(function()
-  local use = use
-  use 'github@github.com:nvim-treesitter/nvim-treesitter.git'
-  use 'github@github.com:sheerun/vim-polyglot.git'
+packer.startup({
+ function(use)
+  use 'nvim-treesitter/nvim-treesitter'
+  use 'sheerun/vim-polyglot'
   -- themes
-  use ({'github@github.com:rose-pine/neovim.git', as = 'rose-pine'})
+  use ({'rose-pine/neovim', as = 'rose-pine'})
   -- sneaking some formatting in here too
-  use 'github@github.com:neovim/nvim-lspconfig.git'
-  use 'github@github.com:nvim-lua/completion-nvim.git'
-  use 'github@github.com:anott03/nvim-lspinstall.git'
+  use 'neovim/nvim-lspconfig'
+  use 'nvim-lua/completion-nvim'
+  use 'anott03/nvim-lspinstall'
 
   -- Fuzzy searching
-  use 'github@github.com:nvim-lua/popup.nvim.git'
-  use 'github@github.com:nvim-lua/plenary.nvim.git'
-  use 'github@github.com:nvim-lua/telescope.nvim.git'
-  use 'github@github.com:jremmen/vim-ripgrep.git'
+  use 'nvim-lua/popup.nvim'
+  use 'nvim-lua/plenary.nvim'
+  use 'nvim-lua/telescope.nvim'
+  use 'jremmen/vim-ripgrep'
 
   
   -- Indent lines
-  use "github@github.com:lukas-reineke/indent-blankline.nvim.git"
+  use "lukas-reineke/indent-blankline.nvim"
 
   -- Status line
   use {
-    'github@github.com:nvim-lualine/lualine.nvim.git',
+    'nvim-lualine/lualine.nvim',
     requires = {
-      'github@github.com:kyazdani42/nvim-web-devicons.git',
+      'kyazdani42/nvim-web-devicons',
       opt = true
     },
     sort_by = "case_sensitive",
@@ -57,32 +57,37 @@ packer.startup(function()
   }
 
   -- File Tree
-  use {'github@github.com:nvim-tree/nvim-tree.lua.git',requires = {'github@github.com:nvim-tree/nvim-web-devicons.git',},tag='nightly'}
+  use {'nvim-tree/nvim-tree.lua',requires = {'nvim-tree/nvim-web-devicons',},tag='nightly'}
 
   -- LSP
   use {
-    'github@github.com:VonHeikemen/lsp-zero.nvim.git',
+    'VonHeikemen/lsp-zero.nvim',
     branch = 'v1.x',
     requires = {
       -- LSP Support
-      {'github@github.com:neovim/nvim-lspconfig.git'},
-      {'github@github.com:williamboman/mason.nvim.git'},
-      {'github@github.com:williamboman/mason-lspconfig.nvim.git'},
+      {'neovim/nvim-lspconfig'},
+      {'williamboman/mason.nvim'},
+      {'williamboman/mason-lspconfig.nvim'},
       --Autocompletion
-      {'github@github.com:hrsh7th/nvim-cmp.git'},
-      {'github@github.com:hrsh7th/cmp-buffer.git'},
-      {'github@github.com:hrsh7th/cmp-path.git'},
-      {'github@github.com:hrsh7th/cmp-cmdline.git'},
-      {'github@github.com:saadparwaiz1/cmp_luasnip.git'},
-      {'github@github.com:hrsh7th/cmp-nvim-lsp.git'},
-      {'github@github.com:hrsh7th/cmp-nvim-lua.git'},
-      {'github@github.com:onsnails/lspkind.nvim.git'},
+      {'hrsh7th/nvim-cmp'},
+      {'hrsh7th/cmp-buffer'},
+      {'hrsh7th/cmp-path'},
+      {'hrsh7th/cmp-cmdline'},
+      {'saadparwaiz1/cmp_luasnip'},
+      {'hrsh7th/cmp-nvim-lsp'},
+      {'hrsh7th/cmp-nvim-lua'},
+      {'onsails/lspkind.nvim'},
       --Snippets
-      {'github@github.com:L3MON4D3/LuaSnip.git'},
-      {'github@github.com:rafamadriz/friendly-snippets.git'},
+      {'L3MON4D3/LuaSnip'},
+      {'rafamadriz/friendly-snippets'},
     }
   }
-  use 'github@github.com:plasticboy/vim-markdown.git'
-end
-)
+  use 'plasticboy/vim-markdown'
+end,
+config = {
+    git = {
+        default_url_format = "github@.com:%s",
+    },
+},
+})
 --- }}}

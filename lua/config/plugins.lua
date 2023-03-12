@@ -15,6 +15,14 @@ vim.cmd('colorscheme rose-pine')
 -- }}}
 
 -- {{{ treesitter lsp
+require("nvim-treesitter.install").prefer_git = true
+local parsers = require("nvim-treesitter.parsers").get_parser_configs()
+for _, p in pairs(parsers) do
+    p.install_info_url = p.install_info.url:gsub(
+        "https://github.com/",
+        "git@github.com:"
+    )
+end
 require'nvim-treesitter.configs'.setup {
   ensure_installed = {"help", "c", "lua", "python", "javascript"},
   sync_install = false,
