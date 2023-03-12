@@ -34,8 +34,20 @@ local default_config = {
 }
 
 -- setup language servers here
-require'lspconfig'.clangd.setup{cmd={"clang"}}
-require("lspconfig").pylsp.setup{}
+
+local lsp = require('lsp-zero').preset({
+  name = 'minimal',
+  set_lsp_keymaps = true,
+  manage_nvim_cmp = true,
+  suggest_lsp_servers = false,
+})
+lsp.setup()
+
+lspconfig.pylsp.setup{}
+lspconfig.ccls.setup{}
+lspconfig.lua_ls.setup{}
+lspconfig.denols.setup{}
+lspconfig.rust_analyzer.setup{}
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -83,21 +95,154 @@ require("nvim-tree").setup({
 -- }}}
 
 -- {{{ Autocomplete
-local lsp = require('lsp-zero').preset({
-  name = 'minimal',
-  set_lsp_keymaps = true,
-  manage_nvim_cmp = true,
-  suggest_lsp_servers = false,
-})
-lsp.nvim_workspace()
-
-vim.diagnostic.config({
-  virtual_text = false
-})
-
--- Show line diagnostics automatically in hover window
-vim.o.updatetime = 250
-vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
-lsp.setup()
+--local lsp = require('lsp-zero').preset({
+--  name = 'minimal',
+--  set_lsp_keymaps = true,
+--  manage_nvim_cmp = true,
+--  suggest_lsp_servers = false,
+--})
+--lsp.nvim_workspace()
+--
+--vim.diagnostic.config({
+--  virtual_text = false
+--})
+--
+---- Show line diagnostics automatically in hover window
+--vim.o.updatetime = 250
+--vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+--lsp.setup()
 -- }}}
 
+-- {{{ completion
+
+local has_words_before = function ()
+  unpack = unpack or table.unpack
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line -1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+-- Set up nvim-cmp.
+local cmp = require'cmp'
+local luasnip = require'luasnip'
+local lspkind = require'lspkind'
+
+cmp.setup({
+  snippet = {
+    -- REQUIRED - you must specify a snippet engine
+    expand = function(args)
+      -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+      require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+      -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+      -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+    end,
+  },
+  view = {
+    entries = {name = 'custom', selection_order = 'near_cursor'}
+  },
+  formatting = {
+    format = lspkind.cmp_format({
+      mode = "symbol_text",
+      maxwidth = 50,
+      ellipsis_char = '...',
+      before = function (entry, vim_item)
+        return vim_item
+      end
+    })
+  },
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
+  },
+  mapping = {
+     ["<CR>"] = cmp.mapping({
+       i = function(fallback)
+         if cmp.visible() and cmp.get_active_entry() then
+           cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+         else
+           fallback()
+         end
+       end,
+       s = cmp.mapping.confirm({ select = true }),
+       c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+     }),
+
+    ["<Down>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable() 
+      -- they way you will only jump inside the snippet region
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      elseif has_words_before() then
+        cmp.complete()
+      else
+        fallback()
+      end
+    end, {'i', 's', 'c'}),
+    ["<Up>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, {'i', 's', 'c'}),
+  },
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    -- { name = 'vsnip' }, -- For vsnip users.
+    { name = 'luasnip' }, -- For luasnip users.
+    -- { name = 'ultisnips' }, -- For ultisnips users.
+    -- { name = 'snippy' }, -- For snippy users.
+    { name = 'buffer' },
+    { name = 'path' },
+  })
+})
+
+-- Set configuration for specific filetype.
+cmp.setup.filetype('gitcommit', {
+  sources = cmp.config.sources({
+    { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+  }, {
+    { name = 'buffer' },
+  })
+})
+
+-- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline({ '/', '?' }, {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = 'buffer' }
+  }
+})
+
+-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  completion = {autocomplete = true},
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+    { name = 'cmdline',}
+  })
+})
+
+-- Set up lspconfig.
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+-- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+require('lspconfig')['pylsp'].setup {
+  capabilities = capabilities
+}
+require('lspconfig')['clangd'].setup {
+  capabilities = capabilities
+}
+require('lspconfig')['lua_ls'].setup {
+  capabilities = capabilities
+}
+require('lspconfig')['denols'].setup {
+  capabilities = capabilities
+}
+
+-- }}} 
+--
