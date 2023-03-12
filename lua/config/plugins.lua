@@ -102,26 +102,7 @@ require("nvim-tree").setup({
 })
 -- }}}
 
--- {{{ Autocomplete
---local lsp = require('lsp-zero').preset({
---  name = 'minimal',
---  set_lsp_keymaps = true,
---  manage_nvim_cmp = true,
---  suggest_lsp_servers = false,
---})
---lsp.nvim_workspace()
---
---vim.diagnostic.config({
---  virtual_text = false
---})
---
----- Show line diagnostics automatically in hover window
---vim.o.updatetime = 250
---vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
---lsp.setup()
--- }}}
-
--- {{{ completion
+--- {{{ completion
 
 local has_words_before = function ()
   unpack = unpack or table.unpack
@@ -242,7 +223,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 require('lspconfig')['pylsp'].setup {
   capabilities = capabilities
 }
-require('lspconfig')['clangd'].setup {
+require('lspconfig')['ccls'].setup {
   capabilities = capabilities
 }
 require('lspconfig')['lua_ls'].setup {
