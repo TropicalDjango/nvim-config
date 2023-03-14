@@ -87,8 +87,9 @@ key_map('n', '<leader>', ':split<CR>')
 key_map('n', '<leader>v', ':vsplit<CR>')
 key_map('n', '<leader>h', ':split<CR>')
 
--- Folding
-key_map('n', '<leader>m', ':fold<CR>f}i<CR><CR><ESC>kdwdwk$')
-key_map('n', '<leader>mc', 'i-- }}} <ESC>')
-key_map('n', '<leader>mo', 'i-- {{{ <ESC>')
-
+-- Troubles
+key_map('n','<leader>xx', ':TroubleToggle<CR>')
+key_map('n','<leader>xw', ':TroubleToggle workspace_diagnostics<CR>')
+key_map('n','<leader>xd', ':TroubleToggle document_diagnostics<CR>')
+key_map('n','<leader>xq', ':TroubleToggle quickfix<CR>')
+key_map('n','gR', ':TroubleToggle lsp_references<CR>')

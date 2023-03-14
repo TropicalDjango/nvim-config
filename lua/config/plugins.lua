@@ -60,12 +60,26 @@ lspconfig.rust_analyzer.setup{}
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     underline = true,
-    virtual_text = false,
+    virtual_text = true,
     signs = true,
     update_in_insert = true,
   }
 )
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+for type, icon in pairs(signs) do
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl= hl, numhl = hl })
+end
+
 --- }}}
+
+require'trouble'.setup{}
+
+-- {{{ troubles
+
+
+
+-- }}} 
 
 -- {{{ Indent line setup
 vim.cmd [[highlight IndentBlanklineIndent1 guifg=#E06C75 gui=nocombine]]

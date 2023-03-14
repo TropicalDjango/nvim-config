@@ -39,7 +39,6 @@ packer.startup({
   use 'nvim-lua/telescope.nvim'
   use 'jremmen/vim-ripgrep'
 
-  
   -- Indent lines
   use "lukas-reineke/indent-blankline.nvim"
 
@@ -83,6 +82,7 @@ packer.startup({
     }
   }
   use 'plasticboy/vim-markdown'
+  use {'folke/trouble.nvim', requires = "nvim-tree/nvim-web-devicons"}
 end,
 config = {
     git = {
