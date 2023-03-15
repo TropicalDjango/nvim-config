@@ -1,7 +1,8 @@
 require('config.packer')
 require("config.lualine")
 
--- {{{ rose-pine
+-- {{{ colorschemes
+
 require('rose-pine').setup({
   variant = 'moon',
   bold_vert_split = true,
@@ -11,7 +12,10 @@ require('rose-pine').setup({
   }
 })
 
-vim.cmd('colorscheme rose-pine')
+require("catppuccin").setup({})
+
+vim.cmd('colorscheme catppuccin')
+
 -- }}}
 
 -- {{{ treesitter lsp
@@ -73,12 +77,8 @@ end
 
 --- }}}
 
-require'trouble'.setup{}
-
 -- {{{ troubles
-
-
-
+require'trouble'.setup{}
 -- }}} 
 
 -- {{{ Indent line setup

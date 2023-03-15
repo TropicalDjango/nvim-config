@@ -27,7 +27,8 @@ packer.startup({
   use 'nvim-treesitter/nvim-treesitter'
   use 'sheerun/vim-polyglot'
   -- themes
-  use ({'rose-pine/neovim', as = 'rose-pine'})
+  use {'rose-pine/neovim', as = 'rose-pine'}
+  use {'catppuccin/nvim', as = 'catppuccin'}
   -- sneaking some formatting in here too
   use 'neovim/nvim-lspconfig'
   use 'nvim-lua/completion-nvim'
