@@ -1,3 +1,5 @@
+local vim = vim
+
 vim.o.termguicolors = true
 vim.o.syntax = 'on'
 vim.o.errorbells = false
@@ -20,7 +22,7 @@ vim.wo.relativenumber = true
 vim.wo.signcolumn = 'yes'
 vim.wo.wrap = false
 
-vim.opt.hlsearch = false
+vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
@@ -38,3 +40,4 @@ vim.g.mapleader = ' '
 vim.bo.autoindent = true
 vim.bo.smartindent = true
 
+vim.o.cursorline = true

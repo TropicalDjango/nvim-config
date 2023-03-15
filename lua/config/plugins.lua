@@ -1,5 +1,8 @@
+require('config.lualine')
 require('config.packer')
-require("config.lualine")
+require('config.options')
+
+local vim = vim
 
 -- {{{ colorschemes
 
@@ -51,7 +54,7 @@ local lsp = require('lsp-zero').preset({
   name = 'minimal',
   set_lsp_keymaps = true,
   manage_nvim_cmp = true,
-  suggest_lsp_servers = false,
+  suggest_lsp_servers = true,
 })
 lsp.setup()
 
@@ -64,7 +67,6 @@ lspconfig.rust_analyzer.setup{}
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     underline = true,
-    virtual_text = true,
     signs = true,
     update_in_insert = true,
   }
@@ -74,6 +76,13 @@ for type, icon in pairs(signs) do
     local hl = "DiagnosticSign" .. type
     vim.fn.sign_define(hl, { text = icon, texthl= hl, numhl = hl })
 end
+
+vim.diagnostic.config({
+  virtual_text = false
+})
+
+vim.o.updatetime = 250
+vim.cmd[[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 --- }}}
 
@@ -157,19 +166,11 @@ cmp.setup({
     documentation = cmp.config.window.bordered(),
   },
   mapping = {
-     ["<CR>"] = cmp.mapping({
-       i = function(fallback)
-         if cmp.visible() and cmp.get_active_entry() then
-           cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
-         else
-           fallback()
-         end
-       end,
-       s = cmp.mapping.confirm({ select = true }),
-       c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
-     }),
+    ["<CR>"] = cmp.mapping.confirm(
+      {behavior = cmp.ConfirmBehavior.Replace, select = true}
+      ),
 
-    ["<Down>"] = cmp.mapping(function(fallback)
+    ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
       -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable() 
@@ -182,7 +183,8 @@ cmp.setup({
         fallback()
       end
     end, {'i', 's', 'c'}),
-    ["<Up>"] = cmp.mapping(function(fallback)
+
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
       elseif luasnip.jumpable(-1) then
@@ -191,7 +193,36 @@ cmp.setup({
         fallback()
       end
     end, {'i', 's', 'c'}),
+
+    ["<Right>"] = cmp.mapping.close({'i','s','c'}),
+
+    ["<Up>"] = cmp.mapping(function (fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.jumpable(1) then
+        luasnip.jump(1)
+      else
+        fallback()
+      end
+    end, {'s','c'}),
+
+    ["<Down>"] = cmp.mapping(function (fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, {'s','c'}),
+
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+
   },
+
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
     -- { name = 'vsnip' }, -- For vsnip users.
@@ -223,7 +254,7 @@ cmp.setup.cmdline({ '/', '?' }, {
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
-  completion = {autocomplete = true},
+  completion = {autocomplete = false},
   sources = cmp.config.sources({
     { name = 'path' }
   }, {

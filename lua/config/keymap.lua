@@ -50,6 +50,7 @@ key_map('n', 'J', "mzJ`z")
 
 -- semi colon to colon
 key_map('n',';', ':')
+key_map('n','.', ';')
 
 -- LSP server functions
 key_map('n', 'gd', ':lua vim.lsp.buf.definition()<CR>')
@@ -80,8 +81,8 @@ key_map('n', '<leader>tn', ':tabnext<CR>')
 key_map('n', '<leader>tN', ':tabnew<CR>')
 
 -- Buffers
-key_map('n', '<leader>', ':vsplit<CR>')
-key_map('n', '<leader>', ':split<CR>')
+key_map('n', '<leader>b', ':bnext<CR>')
+
 
 -- Windows
 key_map('n', '<leader>v', ':vsplit<CR>')
@@ -93,3 +94,4 @@ key_map('n','<leader>xw', ':TroubleToggle workspace_diagnostics<CR>')
 key_map('n','<leader>xd', ':TroubleToggle document_diagnostics<CR>')
 key_map('n','<leader>xq', ':TroubleToggle quickfix<CR>')
 key_map('n','gR', ':TroubleToggle lsp_references<CR>')
+
