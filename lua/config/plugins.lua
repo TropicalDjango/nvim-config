@@ -81,8 +81,9 @@ vim.diagnostic.config({
   virtual_text = false
 })
 
-vim.o.updatetime = 250
-vim.cmd[[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+-- These are for making pop-up diagnostic windows
+-- vim.o.updatetime = 250
+-- vim.cmd[[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 --- }}}
 
@@ -279,4 +280,9 @@ require('lspconfig')['denols'].setup {
 }
 
 -- }}} 
---
+
+require("harpoon").setup({
+  menu = {
+    width = vim.api.nvim_win_get_width(0) - 4,
+  }
+})

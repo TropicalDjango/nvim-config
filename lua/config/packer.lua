@@ -40,6 +40,13 @@ packer.startup({
   use 'nvim-lua/telescope.nvim'
   use 'jremmen/vim-ripgrep'
 
+  use({
+      "nvim-tree/nvim-tree.lua",
+      requires = {
+          "nvim-tree/nvim-web-devicons", -- optional, for file icons
+      },
+  })
+
   -- Indent lines
   use "lukas-reineke/indent-blankline.nvim"
 
@@ -47,7 +54,7 @@ packer.startup({
   use {
     'nvim-lualine/lualine.nvim',
     requires = {
-      'kyazdani42/nvim-web-devicons',
+      'nvim-tree/nvim-web-devicons',
       opt = true
     },
     sort_by = "case_sensitive",
@@ -82,8 +89,16 @@ packer.startup({
       {'rafamadriz/friendly-snippets'},
     }
   }
-  use 'plasticboy/vim-markdown'
+-- install without yarn or npm
+use({
+    "iamcco/markdown-preview.nvim",
+    run = function() vim.fn["mkdp#util#install"]() end,
+})
+
+  -- Debud Window
   use {'folke/trouble.nvim', requires = "nvim-tree/nvim-web-devicons"}
+  -- Harpoon
+  use {'ThePrimeagen/harpoon'}
 end,
 config = {
     git = {
