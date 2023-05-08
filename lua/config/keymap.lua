@@ -6,8 +6,18 @@ local key_map = function(mode, key, result)
     key,
     result,
     {noremap = true, silent = true}
-  )
+    )
 end
+
+-- document editor keys
+key_map('n', '<leader>w', ':set wrap!<CR>')
+
+-- netrw
+vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
+key_map('n', '\\', "''")
+
+-- terminal in new Windows
+key_map('n', '<leader>te', ':split<CR>:terminal<CR>i')
 
 -- search centers cursor
 key_map('n', 'n', "nzzzv")
@@ -36,9 +46,9 @@ key_map('n', 'C', "C<ESC>")
 key_map('n', '<C-f>', "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 
 -- copy into SYSTEM clipboard
-key_map('n', '<leader>y', "\"+y")
-key_map('v', '<leader>y', "\"+y")
-key_map('n', '<leader>Y', "\"+Y")
+key_map('n', '<leader>y', '"+y')
+key_map('v', '<leader>y', '"+y')
+key_map('n', '<leader>Y', '"+Y')
 
 -- newline doesn't go into insert mode 
 key_map('n', 'o', "o<ESC>")
@@ -91,7 +101,6 @@ key_map('n','-',':res -5<CR>')
 
 -- Troubles
 key_map('n','<leader>d', ':TroubleToggle<CR>')
-
 
 -- Harpoon
 key_map('n','<leader>ah',":lua require('harpoon.mark').add_file()<CR>")

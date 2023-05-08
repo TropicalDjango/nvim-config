@@ -1,9 +1,8 @@
 require('config.lualine')
 require('config.packer')
 require('config.options')
-
 local vim = vim
-
+--
 -- {{{ colorschemes
 
 require('rose-pine').setup({
@@ -22,6 +21,7 @@ vim.cmd('colorscheme catppuccin')
 -- }}}
 
 -- {{{ treesitter lsp
+
 require("nvim-treesitter.install").prefer_git = true
 local parsers = require("nvim-treesitter.parsers").get_parser_configs()
 for _, p in pairs(parsers) do
@@ -30,6 +30,7 @@ for _, p in pairs(parsers) do
         "git@github.com:"
     )
 end
+
 require'nvim-treesitter.configs'.setup {
   ensure_installed = {"help", "c", "lua", "python", "javascript"},
   sync_install = false,
@@ -59,7 +60,7 @@ local lsp = require('lsp-zero').preset({
 lsp.setup()
 
 lspconfig.pylsp.setup{}
-lspconfig.ccls.setup{}
+lspconfig.clangd.setup{}
 lspconfig.lua_ls.setup{}
 lspconfig.denols.setup{}
 lspconfig.rust_analyzer.setup{}
@@ -140,18 +141,18 @@ local luasnip = require'luasnip'
 local lspkind = require'lspkind'
 
 cmp.setup({
+  preselect = cmp.PreselectMode.None,
   snippet = {
     -- REQUIRED - you must specify a snippet engine
     expand = function(args)
-      -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
       require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-      -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-      -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
     end,
   },
+
   view = {
     entries = {name = 'custom', selection_order = 'near_cursor'}
   },
+
   formatting = {
     format = lspkind.cmp_format({
       mode = "symbol_text",
@@ -162,18 +163,29 @@ cmp.setup({
       end
     })
   },
+
   window = {
     completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered(),
   },
+
   mapping = {
-    ["<CR>"] = cmp.mapping.confirm(
-      {behavior = cmp.ConfirmBehavior.Replace, select = true}
-      ),
+
+     ["<CR>"] = cmp.mapping({
+       i = function(fallback)
+         if cmp.visible() and cmp.get_active_entry() then
+           cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+         else
+           fallback()
+         end
+       end,
+       s = cmp.mapping.confirm({ select = true }),
+       c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+     }),
 
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
-        cmp.select_next_item()
+        cmp.select_next_item({ behavior = cmp.SelectBehavior.Replace })
       -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable() 
       -- they way you will only jump inside the snippet region
       elseif luasnip.expand_or_jumpable() then
@@ -187,7 +199,7 @@ cmp.setup({
 
     ["<S-Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
-        cmp.select_prev_item()
+        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Replace })
       elseif luasnip.jumpable(-1) then
         luasnip.jump(-1)
       else
@@ -195,44 +207,40 @@ cmp.setup({
       end
     end, {'i', 's', 'c'}),
 
-    ["<Right>"] = cmp.mapping.close({'i','s','c'}),
-
     ["<Up>"] = cmp.mapping(function (fallback)
       if cmp.visible() then
-        cmp.select_next_item()
+        cmp.select_next_item({ behavior = cmp.SelectBehavior.Replace })
       elseif luasnip.jumpable(1) then
         luasnip.jump(1)
       else
         fallback()
       end
-    end, {'s','c'}),
+    end, {'i', 's', 'c'}),
 
     ["<Down>"] = cmp.mapping(function (fallback)
       if cmp.visible() then
-        cmp.select_prev_item()
+        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Replace })
       elseif luasnip.jumpable(-1) then
         luasnip.jump(-1)
       else
         fallback()
       end
-    end, {'s','c'}),
+    end, {'i', 's', 'c'}),
 
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
+    ['<C-a>'] = cmp.mapping.confirm({ select = true }),
+    ['<C-q>'] = cmp.mapping.abort(),
 
   },
 
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
-    -- { name = 'vsnip' }, -- For vsnip users.
-    { name = 'luasnip' }, -- For luasnip users.
-    -- { name = 'ultisnips' }, -- For ultisnips users.
-    -- { name = 'snippy' }, -- For snippy users.
+    { name = 'luasnip' },
     { name = 'buffer' },
     { name = 'path' },
   })
+
 })
 
 -- Set configuration for specific filetype.
@@ -244,18 +252,28 @@ cmp.setup.filetype('gitcommit', {
   })
 })
 
--- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline({ '/', '?' }, {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = {
-    { name = 'buffer' }
-  }
+-- Enable `buffer` and `buffer-lines` for `/` and `?` in the command-line
+cmp.setup.cmdline({ "/", "?" }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    completion = {autocomplete = false},
+    view = {
+      entries = {name = 'wildmenu', seperator = '|'}
+    },
+    sources = {
+        {
+            name = "buffer",
+        },
+        { name = "buffer-lines" }
+    }
 })
-
+--
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
   completion = {autocomplete = false},
+  view = {
+    entries = {name = 'wildmenu', seperator = '|'}
+  },
   sources = cmp.config.sources({
     { name = 'path' }
   }, {
@@ -269,7 +287,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 require('lspconfig')['pylsp'].setup {
   capabilities = capabilities
 }
-require('lspconfig')['ccls'].setup {
+require('lspconfig')['clangd'].setup {
   capabilities = capabilities
 }
 require('lspconfig')['lua_ls'].setup {
