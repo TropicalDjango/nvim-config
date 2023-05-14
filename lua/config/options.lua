@@ -9,7 +9,6 @@ vim.bo.swapfile = false
 vim.o.backup = false
 vim.o.undodir = vim.fn.stdpath('config') .. '/undodir'
 vim.o.undofile = true
-vim.o.incsearch = true
 vim.o.hidden = true
 vim.o.completeopt='menuone,noinsert,noselect'
 vim.o.tabstop = 4
@@ -22,22 +21,25 @@ vim.wo.relativenumber = true
 vim.wo.signcolumn = 'yes'
 vim.wo.wrap = false
 
+vim.opt.ignorecase = true
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.updatetime = 750
 vim.opt.colorcolumn = "80"
+vim.opt.splitright = true
+vim.opt.splitbelow = true
 
 -- for folding
 vim.opt.foldmethod = "marker"
 
 -- disable netrw at the very start of your init.lua (strongly advised)
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
 vim.g.mapleader = ' '
 
 vim.bo.autoindent = true
 vim.bo.smartindent = true
 
 vim.o.cursorline = true
+vim.cmd[[ set mouse=c ]]
+vim.cmd[[ set mousehide ]]

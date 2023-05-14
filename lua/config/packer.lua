@@ -40,13 +40,6 @@ packer.startup({
   use 'nvim-lua/telescope.nvim'
   use 'jremmen/vim-ripgrep'
 
-  use({
-      "nvim-tree/nvim-tree.lua",
-      requires = {
-          "nvim-tree/nvim-web-devicons", -- optional, for file icons
-      },
-  })
-
   -- Indent lines
   use "lukas-reineke/indent-blankline.nvim"
 
@@ -64,7 +57,7 @@ packer.startup({
   }
 
   -- File Tree
-  use {'nvim-tree/nvim-tree.lua',requires = {'nvim-tree/nvim-web-devicons',},tag='nightly'}
+  -- use {'nvim-tree/nvim-tree.lua',requires = {'nvim-tree/nvim-web-devicons',},tag='nightly'}
 
   -- LSP
   use {
@@ -99,6 +92,9 @@ use({
   use {'folke/trouble.nvim', requires = "nvim-tree/nvim-web-devicons"}
   -- Harpoon
   use {'ThePrimeagen/harpoon'}
+
+  -- terminal plugin
+  use {"akinsho/toggleterm.nvim"}
 end,
 config = {
     git = {
