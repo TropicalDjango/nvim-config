@@ -41,8 +41,21 @@ packer.startup({
   use 'jremmen/vim-ripgrep'
 
   -- Indent lines
-  use "lukas-reineke/indent-blankline.nvim"
-
+  use {
+    "lukas-reineke/indent-blankline.nvim",
+    config = function()
+      require('ibl').setup({
+          exclude = {
+            buftypes = { 'terminal' },
+            filetypes = { 'dashboard', 'NvimTree', 'packer', 'lsp-installer'}
+          },
+          scope = {
+            enable = true,
+            show_end = true
+          }
+        })
+      end
+  }
   -- Status line
   use {
     'nvim-lualine/lualine.nvim',

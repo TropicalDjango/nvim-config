@@ -39,7 +39,7 @@ key_map('n', '<leader>p', "\"_dP")
 key_map('n', 'c', "c<ESC>")
 key_map('n', 'C', "C<ESC>")
 
-function capital(str)
+local function capital(str)
   return (str:gsub("^%l", string.upper))
 end
 local coms = {'y', 'p', 'c'}
@@ -48,7 +48,6 @@ for _, com in ipairs(coms) do
   key_map('v', '<leader>' .. com, '"+' .. com)
   key_map('n', '<leader>' .. capital(com), '"+' .. capital(com))
 end
-
 
 -- newline doesn't go into insert mode 
 key_map('n', 'o', "o<ESC>")
@@ -68,9 +67,9 @@ key_map('n',';', ':')
 -- key_map('n', 'gW', ':lua vim.lsp.buf.workspace_symbol()<CR>')
 -- key_map('n', 'gr', ':lua vim.lsp.buf.references()<CR>')
 -- key_map('n', 'gt', ':lua+vim.lsp.buf.type_definition()<CR>')
+-- key_map('n', '<leader>af', ':lua vim.lsp.buf.code_action()<CR>')
 key_map('n', 'K', ':lua vim.lsp.buf.hover()<CR>')
 key_map('n', '<C-s>', ':lua vim.lsp.buf.signature_help()<CR>')
--- key_map('n', '<leader>af', ':lua vim.lsp.buf.code_action()<CR>')
 key_map('n', '<leader>rn', ':lua vim.lsp.buf.rename()<CR>')
 key_map('n', '<leader>e', ':lua vim.diagnostic.open_float()<CR>')
 

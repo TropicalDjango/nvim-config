@@ -2,7 +2,7 @@ require('config.lualine')
 require('config.packer')
 require('config.options')
 local vim = vim
---
+
 -- {{{ colorschemes
 
 require('rose-pine').setup({
@@ -100,18 +100,8 @@ vim.cmd [[highlight IndentBlanklineIndent4 guifg=#56B6C2 gui=nocombine]]
 vim.cmd [[highlight IndentBlanklineIndent5 guifg=#61AFEF gui=nocombine]]
 vim.cmd [[highlight IndentBlanklineIndent6 guifg=#C678DD gui=nocombine]]
 
-require("indent_blankline").setup {
-  space_char_blankline = " ",
-  char_highlight_list = {
-    "IndentBlanklineIndent1",
-    "IndentBlanklineIndent2",
-    "IndentBlanklineIndent3",
-    "IndentBlanklineIndent4",
-    "IndentBlanklineIndent5",
-    "IndentBlanklineIndent6",
-  },
-  show_current_context_start = true,
-  show_current_context = true,
+require("ibl").setup {
+
 }
 --- }}}
 
@@ -172,8 +162,12 @@ cmp.setup({
      }),
 
     ["<Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item({ behavior = cmp.SelectBehavior.Replace })
+      if cmp.visible() and cmp.get_active_entry then
+        if cmp.get_active_entry then
+          cmp.select_next_item({ behavior = cmp.SelectBehavior.Replace })
+        else
+          cmp.select_next_item({ behavior = cmp.SelectBehavior.Replace })
+        end
       -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable() 
       -- they way you will only jump inside the snippet region
       elseif luasnip.expand_or_jumpable() then
@@ -195,25 +189,25 @@ cmp.setup({
       end
     end, {'i', 's', 'c'}),
 
-    ["<Up>"] = cmp.mapping(function (fallback)
-      if cmp.visible() then
-        cmp.select_next_item({ behavior = cmp.SelectBehavior.Replace })
-      elseif luasnip.jumpable(1) then
-        luasnip.jump(1)
-      else
-        fallback()
-      end
-    end, {'i', 's', 'c'}),
+    --["<Up>"] = cmp.mapping(function (fallback)
+    --  if cmp.visible() then
+    --    cmp.select_next_item({ behavior = cmp.SelectBehavior.Replace })
+    --  elseif luasnip.jumpable(1) then
+    --    luasnip.jump(1)
+    --  else
+    --    fallback()
+    --  end
+    --end, {'i', 's', 'c'}),
 
-    ["<Down>"] = cmp.mapping(function (fallback)
-      if cmp.visible() then
-        cmp.select_prev_item({ behavior = cmp.SelectBehavior.Replace })
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, {'i', 's', 'c'}),
+    --["<Down>"] = cmp.mapping(function (fallback)
+    --  if cmp.visible() then
+    --    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Replace })
+    --  elseif luasnip.jumpable(-1) then
+    --    luasnip.jump(-1)
+    --  else
+    --    fallback()
+    --  end
+    --end, {'i', 's', 'c'}),
 
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
