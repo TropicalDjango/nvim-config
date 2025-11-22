@@ -26,12 +26,16 @@ packer.startup({
  function(use)
   use 'nvim-treesitter/nvim-treesitter'
   use 'sheerun/vim-polyglot'
+
   -- themes
-  use {'rose-pine/neovim', as = 'rose-pine'}
   use {'catppuccin/nvim', as = 'catppuccin'}
+
   -- sneaking some formatting in here too
   use 'neovim/nvim-lspconfig'
+
+  -- Autocompletion
   use 'nvim-lua/completion-nvim'
+
   use 'anott03/nvim-lspinstall'
 
   -- Fuzzy searching
@@ -50,12 +54,19 @@ packer.startup({
             filetypes = { 'dashboard', 'NvimTree', 'packer', 'lsp-installer'}
           },
           scope = {
-            enable = true,
             show_end = true
           }
         })
       end
   }
+
+  -- Buffer lines (tabs window)
+  use {
+    'akinsho/bufferline.nvim',
+    tag = "*",
+    requires = "nvim-tree/nvim-web-devicons"
+  }
+
   -- Status line
   use {
     'nvim-lualine/lualine.nvim',
@@ -70,7 +81,12 @@ packer.startup({
   }
 
   -- File Tree
-  -- use {'nvim-tree/nvim-tree.lua',requires = {'nvim-tree/nvim-web-devicons',},tag='nightly'}
+  use {
+    'nvim-tree/nvim-tree.lua',
+    requires = {
+      'nvim-tree/nvim-web-devicons',
+    },
+  }
 
   -- LSP
   use {
@@ -95,19 +111,22 @@ packer.startup({
       {'rafamadriz/friendly-snippets'},
     }
   }
+
 -- install without yarn or npm
 use({
     "iamcco/markdown-preview.nvim",
     run = function() vim.fn["mkdp#util#install"]() end,
 })
 
-  -- Debud Window
+  -- Debug Window
   use {'folke/trouble.nvim', requires = "nvim-tree/nvim-web-devicons"}
+
   -- Harpoon
   use {'ThePrimeagen/harpoon'}
 
   -- terminal plugin
   use {"akinsho/toggleterm.nvim"}
+
 end,
 config = {
     git = {

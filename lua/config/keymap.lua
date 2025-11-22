@@ -33,7 +33,7 @@ key_map('v', '>', ">`[v`]")
 key_map('v', '<', "<`[v`]")
 
 -- The greatest remap of all time (delete without changing buffer)
-key_map('n', '<leader>p', "\"_dP")
+key_map('n', '<leader>p', "\"0dP")
 
 -- leave insert after copy 
 key_map('n', 'c', "c<ESC>")
@@ -67,8 +67,8 @@ key_map('n',';', ':')
 -- key_map('n', 'gW', ':lua vim.lsp.buf.workspace_symbol()<CR>')
 -- key_map('n', 'gr', ':lua vim.lsp.buf.references()<CR>')
 -- key_map('n', 'gt', ':lua+vim.lsp.buf.type_definition()<CR>')
--- key_map('n', '<leader>af', ':lua vim.lsp.buf.code_action()<CR>')
-key_map('n', 'K', ':lua vim.lsp.buf.hover()<CR>')
+key_map('n', '<leader>af', ':lua vim.lsp.buf.code_action()<CR>')
+key_map('n', '<C-k>', ':lua vim.lsp.buf.hover()<CR>')
 key_map('n', '<C-s>', ':lua vim.lsp.buf.signature_help()<CR>')
 key_map('n', '<leader>rn', ':lua vim.lsp.buf.rename()<CR>')
 key_map('n', '<leader>e', ':lua vim.diagnostic.open_float()<CR>')
@@ -95,3 +95,5 @@ key_map('n','<leader>d', ':TroubleToggle<CR>')
 key_map('n','<leader>ah',":lua require('harpoon.mark').add_file()<CR>")
 key_map('n','<leader>h',":lua require('harpoon.ui').toggle_quick_menu()<CR>")
 
+-- Nvim Tree
+key_map('n', '<leader>t', ":NvimTreeToggle")

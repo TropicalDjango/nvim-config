@@ -3,7 +3,7 @@ require('config.packer')
 require('config.options')
 local vim = vim
 
--- {{{ colorschemes
+-- {{{ Colorschemes
 
 require('rose-pine').setup({
   variant = 'moon',
@@ -20,7 +20,7 @@ vim.cmd('colorscheme catppuccin')
 
 -- }}}
 
--- {{{ treesitter lsp
+-- {{{ Treesitter lsp
 
 require("nvim-treesitter.install").prefer_git = true
 local parsers = require("nvim-treesitter.parsers").get_parser_configs()
@@ -88,7 +88,7 @@ vim.diagnostic.config({
 
 --- }}}
 
--- {{{ troubles
+-- {{{ Troubles
 require'trouble'.setup{}
 -- }}} 
 
@@ -100,12 +100,11 @@ vim.cmd [[highlight IndentBlanklineIndent4 guifg=#56B6C2 gui=nocombine]]
 vim.cmd [[highlight IndentBlanklineIndent5 guifg=#61AFEF gui=nocombine]]
 vim.cmd [[highlight IndentBlanklineIndent6 guifg=#C678DD gui=nocombine]]
 
-require("ibl").setup {
+require("ibl").setup()
 
-}
 --- }}}
 
---- {{{ completion
+-- {{{ Completion
 
 local has_words_before = function ()
   unpack = unpack or table.unpack
@@ -287,8 +286,58 @@ require("toggleterm").setup{}
 
 -- }}}
 
+-- {{{ Harpoon
 require("harpoon").setup({
   menu = {
     width = vim.api.nvim_win_get_width(0) - 4,
   }
 })
+-- }}}
+
+-- {{{ Buffer Lines
+
+vim.opt.termguicolors = true
+local bufferline = require('bufferline')
+bufferline.setup({
+    options = {
+        -- style_preset = bufferline.style_preset.no_italic,
+        -- or you can combine these e.g.
+        style_preset = {
+            bufferline.style_preset.no_italic,
+            bufferline.style_preset.no_bold,
+            separator_style = "thick"
+        },
+    }
+})
+-- }}}
+
+-- {{{ Nvim-Tree
+
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- optionally enable 24-bit colour
+vim.opt.termguicolors = true
+
+-- empty setup using defaults
+require("nvim-tree").setup()
+
+-- OR setup with some options
+require("nvim-tree").setup({
+  sort = {
+    sorter = "case_sensitive",
+  },
+  view = {
+    width = 30,
+  },
+  renderer = {
+    group_empty = true,
+  },
+  filters = {
+    dotfiles = true,
+  },
+})
+
+-- }}}
+
