@@ -37,7 +37,6 @@ require'nvim-treesitter.configs'.setup {
   highlight = {enable = true,}
 }
 
-local lspconfig = require'lspconfig'
 local completion = require'completion'
 
 local function custom_on_attach(client)
@@ -51,19 +50,13 @@ local default_config = {
 
 -- setup language servers here
 
-local lsp = require('lsp-zero').preset({
-  name = 'minimal',
-  set_lsp_keymaps = true,
-  manage_nvim_cmp = true,
-  suggest_lsp_servers = true,
-})
-lsp.setup()
-
-lspconfig.pylsp.setup{}
-lspconfig.clangd.setup{}
-lspconfig.lua_ls.setup{}
-lspconfig.denols.setup{}
-lspconfig.rust_analyzer.setup{}
+--local lsp = require('lsp-zero').preset({
+--  name = 'minimal',
+--  set_lsp_keymaps = true,
+--  manage_nvim_cmp = true,
+--  suggest_lsp_servers = true,
+--})
+-- lsp.setup()
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -151,7 +144,7 @@ cmp.setup({
      ["<CR>"] = cmp.mapping({
        i = function(fallback)
          if cmp.visible() and cmp.get_active_entry() then
-           cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+           cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true })
          else
            fallback()
          end
@@ -262,21 +255,27 @@ cmp.setup.cmdline(':', {
   })
 })
 
--- Set up lspconfig.
+-- Set up vim.lsp.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-require('lspconfig')['pylsp'].setup {
+vim.lsp.config("pylsp", {
   capabilities = capabilities
-}
-require('lspconfig')['clangd'].setup {
+})
+vim.lsp.config('clangd', {
   capabilities = capabilities
-}
-require('lspconfig')['lua_ls'].setup {
+})
+vim.lsp.config('lua_ls', {
   capabilities = capabilities
-}
-require('lspconfig')['denols'].setup {
+})
+vim.lsp.config('denols', {
   capabilities = capabilities
-}
+})
+
+vim.lsp.enable("pylsp")
+vim.lsp.enable("clangd")
+vim.lsp.enable("lua_ls")
+vim.lsp.enable{"denols"}
+vim.lsp.enable{"rust_analyzer"}
 
 -- }}} 
 
