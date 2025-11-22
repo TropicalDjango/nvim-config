@@ -1,19 +1,18 @@
 require('config.lualine')
 require('config.packer')
 require('config.options')
+
+-- automatically run PackerCompile
+vim.cmd([[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+  augroup end
+]])
+
 local vim = vim
 
 -- {{{ Colorschemes
-
-require('rose-pine').setup({
-  variant = 'moon',
-  bold_vert_split = true,
-  groups = {
-    background='#191724',
-    punctuation = 'text',
-  }
-})
-
 require("catppuccin").setup({})
 
 vim.cmd('colorscheme catppuccin')
@@ -49,14 +48,6 @@ local default_config = {
 }
 
 -- setup language servers here
-
---local lsp = require('lsp-zero').preset({
---  name = 'minimal',
---  set_lsp_keymaps = true,
---  manage_nvim_cmp = true,
---  suggest_lsp_servers = true,
---})
--- lsp.setup()
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
